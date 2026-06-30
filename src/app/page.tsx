@@ -104,7 +104,7 @@ export default async function Home() {
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
-                href={primaryHref}
+                href="/compare"
                 className="flex items-center gap-2 border border-gray-300 text-gray-700 hover:border-gray-400 font-medium px-6 py-3 rounded-xl transition-colors"
               >
                 <MapPin className="w-4 h-4" />
@@ -122,7 +122,7 @@ export default async function Home() {
           {/* Right: cards */}
           <div className="space-y-5">
             <Link
-              href={primaryHref}
+              href="/compare"
               className="block bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="flex items-start justify-between">

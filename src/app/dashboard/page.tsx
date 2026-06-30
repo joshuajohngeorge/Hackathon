@@ -6,7 +6,6 @@ import {
   FileText,
   TrendingUp,
   ArrowRight,
-  LogOut,
   Upload,
   Globe2,
   MessageSquare,
@@ -70,7 +69,7 @@ export default async function DashboardPage() {
           </Link>
 
           <Link
-            href="/rent-check"
+            href="/compare"
             className="group bg-white rounded-2xl border border-gray-200 p-8 shadow-sm hover:shadow-md hover:border-green-200 transition-all"
           >
             <div className="flex items-start justify-between mb-6">
