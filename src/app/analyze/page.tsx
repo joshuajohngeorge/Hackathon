@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Shield, ArrowLeft, FileText } from "lucide-react";
 import { SignOutButton } from "@/components/SignOutButton";
+import { LeaseAnalyzer } from "@/components/LeaseAnalyzer";
 
 export default async function AnalyzePage() {
   const supabase = await createClient();
@@ -14,10 +15,7 @@ export default async function AnalyzePage() {
       <header className="bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center">
-              <Shield className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-bold text-gray-900">LeaseCheck CU</span>
+            <img src="/beaver.png" alt="Lease Beaver" className="w-12 h-12 object-contain" />
           </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-500 hidden sm:block">{user.email}</span>
@@ -41,13 +39,7 @@ export default async function AnalyzePage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
-          <div className="text-5xl mb-4">📄</div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Coming soon</h2>
-          <p className="text-gray-500 max-w-sm mx-auto">
-            Lease analysis is being built. Drop a PDF here and we&apos;ll flag every red clause.
-          </p>
-        </div>
+        <LeaseAnalyzer />
       </main>
     </div>
   );

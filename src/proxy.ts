@@ -32,12 +32,15 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Routes that require auth
-  const protectedRoutes = ["/dashboard", "/analyze", "/rent-check"];
+  const protectedRoutes = ["/dashboard", "/analyze", "/rent-check", "/dispute-assistant"];
+
+  // Routes accessible during password recovery (skip auth redirect)
+  const recoveryRoutes = ["/auth/reset-password"];
 
   // Routes only for unauthenticated users
   const authRoutes = ["/login", "/signup"];
 
-  if (!user && protectedRoutes.some((r) => pathname.startsWith(r))) {
+  if (!user && protectedRoutes.some((r) => pathname.startsWith(r)) && !recoveryRoutes.some((r) => pathname.startsWith(r))) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 

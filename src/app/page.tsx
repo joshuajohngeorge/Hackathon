@@ -28,12 +28,7 @@ export default async function Home() {
       <header className="border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-full bg-green-600 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-bold text-lg text-gray-900">
-              LeaseCheck CU
-            </span>
+            <img src="/beaver.png" alt="Lease Beaver" className="w-14 h-14 object-contain" />
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -281,12 +276,7 @@ export default async function Home() {
       <footer className="bg-green-50/40">
         <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-green-600 flex items-center justify-center">
-              <Shield className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-semibold text-sm text-gray-900">
-              LeaseCheck CU
-            </span>
+            <img src="/beaver.png" alt="Lease Beaver" className="w-10 h-10 object-contain" />
           </div>
           <p className="text-xs text-gray-500 text-center">
             Not legal advice. For educational purposes only. Always consult a

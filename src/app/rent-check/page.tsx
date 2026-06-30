@@ -14,10 +14,7 @@ export default async function RentCheckPage() {
       <header className="bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center">
-              <Shield className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-bold text-gray-900">LeaseCheck CU</span>
+            <img src="/beaver.png" alt="Lease Beaver" className="w-12 h-12 object-contain" />
           </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-500 hidden sm:block">{user.email}</span>

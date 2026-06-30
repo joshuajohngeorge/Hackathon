@@ -10,6 +10,7 @@ import {
   Upload,
   Globe2,
   MessageSquare,
+  Scale,
 } from "lucide-react";
 import { SignOutButton } from "@/components/SignOutButton";
 
@@ -27,10 +28,7 @@ export default async function DashboardPage() {
       <header className="bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center">
-              <Shield className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-bold text-gray-900">LeaseCheck CU</span>
+            <img src="/beaver.png" alt="Lease Beaver" className="w-[180px] h-[180px] object-contain" />
           </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-500 hidden sm:block">{user.email}</span>
@@ -47,7 +45,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Main action cards */}
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
           <Link
             href="/analyze"
             className="group bg-white rounded-2xl border border-gray-200 p-8 shadow-sm hover:shadow-md hover:border-green-200 transition-all"
@@ -89,6 +87,25 @@ export default async function DashboardPage() {
             <div className="h-2 rounded-full bg-gradient-to-r from-green-500 via-yellow-400 to-red-500" />
           </Link>
         </div>
+
+        {/* Dispute Assistant full-width card */}
+        <Link
+          href="/dispute-assistant"
+          className="group bg-white rounded-2xl border border-gray-200 p-8 shadow-sm hover:shadow-md hover:border-green-200 transition-all flex items-center justify-between gap-6 mb-6"
+        >
+          <div className="flex items-center gap-5">
+            <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center shrink-0">
+              <Scale className="w-6 h-6 text-green-600" />
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-1">Dispute Assistant</h2>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                Get help disputing any lease issue — security deposits, early termination, landlord entry, habitability, and more. Grounded in Illinois law and C-U norms.
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-green-500 group-hover:translate-x-1 transition-all shrink-0" />
+        </Link>
 
         {/* How it works */}
         <div className="bg-white rounded-2xl border border-gray-200 p-8">
