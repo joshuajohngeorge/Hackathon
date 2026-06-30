@@ -32,7 +32,7 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Routes that require auth
-  const protectedRoutes = ["/dashboard", "/analyze"];
+  const protectedRoutes = ["/dashboard", "/analyze", "/rent-check"];
 
   // Routes only for unauthenticated users
   const authRoutes = ["/login", "/signup"];

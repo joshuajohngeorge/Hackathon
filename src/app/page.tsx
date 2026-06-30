@@ -20,7 +20,7 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const primaryHref = user ? "/dashboard" : "/login";
+  const primaryHref = user ? "/dashboard" : "/signup";
 
   return (
     <div className="min-h-screen bg-white">
