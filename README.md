@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lease Beaver
+
+Lease Beaver is a student rent and lease helper built for UIUC renters in Champaign-Urbana. The idea is simple: leases are confusing, rent prices are hard to sanity-check, and most students do not have time to read legal language line by line.
+
+This app gives renters a friendlier place to start. It can flag suspicious lease language, compare rent against nearby listings, and help students think through common landlord or housing disputes.
+
+## Features
+
+- **Lease Checker**: Upload or paste lease text and get plain-English flags for risky clauses, confusing terms, hidden fees, and questions worth asking before signing.
+- **Rent Fairness Check**: Enter rent, bedroom count, and a Champaign-Urbana location to see how the price compares with nearby listings.
+- **Dispute Assistant**: Chat through housing issues like fees, deposits, landlord entry, repairs, and lease terms.
+- **Student accounts**: Supabase auth keeps each user’s dashboard and lease history tied to their account.
+
+## Tech Stack
+
+- Next.js 16 App Router
+- React 19
+- Tailwind CSS 4
+- Supabase
+- Anthropic Claude API
+- Papa Parse for the local C-U rental listing dataset
+- RAG for lease/legal context retrieval.
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a `.env.local` file with:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+ANTHROPIC_API_KEY=your_anthropic_api_key
+```
+
+Apply the Supabase migration in `supabase/migrations/`, then start the app:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev
+npm run build
+npm run start
+npm run lint
+```
 
-## Learn More
+## Key Routes
 
-To learn more about Next.js, take a look at the following resources:
+- `/` - public landing page
+- `/signup` and `/login` - authentication
+- `/dashboard` - signed-in product hub
+- `/analyze` - lease upload and analysis
+- `/compare` - rent fairness checker
+- `/rent-check` - redirects to the rent fairness checker
+- `/dispute-assistant` - lease dispute chat
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Rental Data
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Rent comparisons use `uiuc_rentals_clean.csv` as the local listing source. The matching logic lives in `src/lib/compareListings.ts`, and the rent fairness form/map live in `src/app/compare/CompareForm.tsx`.
 
-## Deploy on Vercel
+## Notes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The app uses `public/beaver.png` as the main Lease Beaver logo across the landing page, dashboard, lease checker, and rent fairness page
