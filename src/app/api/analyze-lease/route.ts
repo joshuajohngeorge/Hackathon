@@ -83,29 +83,30 @@ function repairTruncated(blob: string): string {
   return repaired;
 }
 
+function toAnalysis(j: Partial<AiLeaseAnalysis>): AiLeaseAnalysis {
+  return {
+    summary: typeof j.summary === "string" ? j.summary : "",
+    flags: Array.isArray(j.flags) ? normalizeFlags(j.flags) : [],
+  };
+}
+
 function parseAiResponse(raw: string, stopReason: string | null): AiLeaseAnalysis | null {
   const blob = extractJsonBlob(raw);
 
-  // First try: parse as-is
-  try {
-    const j = JSON.parse(blob) as Partial<AiLeaseAnalysis>;
-    return {
-      summary: typeof j.summary === "string" ? j.summary : "",
-      flags: Array.isArray(j.flags) ? normalizeFlags(j.flags) : [],
-    };
-  } catch { /* fall through */ }
+  // Pass 1: parse extracted blob as-is
+  try { return toAnalysis(JSON.parse(blob)); } catch { /* fall through */ }
 
-  // Second try: if truncated by max_tokens, attempt structural repair
-  if (stopReason === "max_tokens") {
-    try {
-      const j = JSON.parse(repairTruncated(blob)) as Partial<AiLeaseAnalysis>;
-      return {
-        summary: typeof j.summary === "string" ? j.summary : "",
-        flags: Array.isArray(j.flags) ? normalizeFlags(j.flags) : [],
-      };
-    } catch { /* fall through */ }
+  // Pass 2: structural repair (handles truncation regardless of stop reason)
+  try { return toAnalysis(JSON.parse(repairTruncated(blob))); } catch { /* fall through */ }
+
+  // Pass 3: scan the raw string for ANY valid JSON object (last resort)
+  const match = raw.match(/\{[\s\S]*\}/);
+  if (match) {
+    try { return toAnalysis(JSON.parse(match[0])); } catch { /* fall through */ }
+    try { return toAnalysis(JSON.parse(repairTruncated(match[0]))); } catch { /* fall through */ }
   }
 
+  console.error("stop_reason:", stopReason, "raw length:", raw.length);
   return null;
 }
 
