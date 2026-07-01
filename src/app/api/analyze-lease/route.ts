@@ -112,6 +112,14 @@ function parseAiResponse(raw: string, stopReason: string | null): AiLeaseAnalysi
 // Extracts plain text from a PDF buffer page by page using pdfjs-dist.
 // Dynamic import avoids Next.js module hoisting issues with the worker path.
 async function extractPdfText(buffer: ArrayBuffer): Promise<string> {
+  // pdfjs references DOMMatrix which doesn't exist in Node.js — stub it out.
+  if (typeof globalThis.DOMMatrix === "undefined") {
+    // @ts-expect-error — intentional Node.js polyfill for pdfjs
+    globalThis.DOMMatrix = class DOMMatrix {
+      constructor() { return this; }
+    };
+  }
+
   const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
 
   pdfjs.GlobalWorkerOptions.workerSrc = pathToFileURL(
