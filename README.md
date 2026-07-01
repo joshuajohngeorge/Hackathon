@@ -1,25 +1,25 @@
 # Lease Beaver
 
-Lease Beaver is a student rent and lease helper built for UIUC renters in Champaign-Urbana. The idea is simple: leases are confusing, rent prices are hard to sanity-check, and most students do not have time to read legal language line by line.
+Lease Beaver is a rent and lease helper we built for UIUC students living around Champaign-Urbana. We kept running into the same problem: leases are long, rent prices are hard to judge, and unfair charges can be really hard to push back on when you do not know what is normal.
 
-This app gives renters a friendlier place to start. It can flag suspicious lease language, compare rent against nearby listings, and help students think through common landlord or housing disputes.
+The app gives renters a better starting point. You can check a lease for suspicious or unfair clauses, compare your rent against nearby listings, and get help thinking through disputes before paying a charge or accepting a landlord's explanation at face value.
 
 ## Features
 
-- **Lease Checker**: Upload or paste lease text and get plain-English flags for risky clauses, confusing terms, hidden fees, and questions worth asking before signing.
-- **Rent Fairness Check**: Enter rent, bedroom count, and a Champaign-Urbana location to see how the price compares with nearby listings.
-- **Dispute Assistant**: Chat through housing issues like fees, deposits, landlord entry, repairs, and lease terms.
-- **Student accounts**: Supabase auth keeps each user’s dashboard and lease history tied to their account.
+- **Lease Checker**: Paste or upload a lease and get plain-English notes on suspicious clauses, unfair terms, confusing language, hidden fees, and things worth asking about before signing.
+- **Rent Fairness Check**: Enter your rent, bedroom count, and location to see how your price stacks up against nearby Champaign-Urbana listings.
+- **Dispute Assistant**: Talk through problems like unfair charges, deposit deductions, repairs, landlord entry, fees, and lease terms so students have a clearer way to push back during disputes.
+- **Student accounts**: Sign in, come back later, and keep your lease checks tied to your own dashboard.
 
 ## Tech Stack
 
 - Next.js 16 App Router
 - React 19
 - Tailwind CSS 4
-- Supabase
-- Anthropic Claude API
-- Papa Parse for the local C-U rental listing dataset
-- RAG for lease/legal context retrieval.
+- Supabase for auth and saved lease analysis
+- Anthropic Claude API for lease analysis and dispute chat
+- Papa Parse for working with the local Champaign-Urbana rental dataset
+- RAG for lease/legal context retrieval and grounding the assistant in more relevant housing information
 
 ## Getting Started
 
@@ -38,7 +38,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 ANTHROPIC_API_KEY=your_anthropic_api_key
 ```
 
-Apply the Supabase migration in `supabase/migrations/`, then start the app:
+Apply the Supabase migration in `supabase/migrations/`, then run the app:
 
 ```bash
 npm run dev
@@ -67,8 +67,8 @@ npm run lint
 
 ## Rental Data
 
-Rent comparisons use `uiuc_rentals_clean.csv` as the local listing source. The matching logic lives in `src/lib/compareListings.ts`, and the rent fairness form/map live in `src/app/compare/CompareForm.tsx`.
+Rent comparisons come from `uiuc_rentals_clean.csv`, a cleaned local dataset of Champaign-Urbana listings. The matching logic lives in `src/lib/compareListings.ts`, and the rent fairness form/map live in `src/app/compare/CompareForm.tsx`.
 
 ## Notes
 
-The app uses `public/beaver.png` as the main Lease Beaver logo across the landing page, dashboard, lease checker, and rent fairness page
+The Beaver logo lives at `public/beaver.png` and is used across the landing page, dashboard, lease checker, and rent fairness page.
