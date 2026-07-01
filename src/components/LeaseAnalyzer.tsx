@@ -1,3 +1,6 @@
+// Client component for the /analyze page.
+// Handles PDF drag-and-drop upload, displays the AI analysis (summary + severity-coded
+// flag cards), and provides an inline chat for asking follow-up questions.
 "use client";
 
 import { useState, useRef } from "react";

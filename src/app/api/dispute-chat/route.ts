@@ -1,3 +1,6 @@
+// POST /api/dispute-chat
+// Inline chat tied to a specific lease analysis. Loads the flagged clauses and
+// conversation history from Supabase, sends them to Claude, and saves both turns.
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { anthropic, MODEL } from "@/lib/anthropic";

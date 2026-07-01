@@ -1,3 +1,6 @@
+// POST /api/analyze-lease
+// Accepts a PDF upload, extracts text via pdfjs, sends it to Claude for analysis,
+// and saves the result (summary + flagged clauses) to the lease_analyses table.
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { anthropic, MODEL } from "@/lib/anthropic";
@@ -48,18 +51,20 @@ function normalizeFlags(aiFlags: unknown[]): AiLeaseFlag[] {
   return merged.slice(0, 12);
 }
 
+// Strips markdown fences and any preamble/postamble text Claude sometimes adds,
+// leaving just the raw JSON object.
 function extractJsonBlob(raw: string): string {
-  // Strip markdown fences
   let s = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
-  // Find outermost { ... } in case Claude added preamble/postamble text
   const start = s.indexOf("{");
   const end = s.lastIndexOf("}");
   if (start !== -1 && end > start) s = s.slice(start, end + 1);
   return s;
 }
 
+// If the response was cut off by max_tokens, walks the JSON char by char to
+// close any unclosed arrays/objects so it can still be parsed.
 function repairTruncated(blob: string): string {
-  // If max_tokens cut the response mid-JSON, close any open arrays/objects
+  // Close any open arrays/objects
   const stack: string[] = [];
   let inString = false;
   let escape = false;
@@ -104,9 +109,9 @@ function parseAiResponse(raw: string, stopReason: string | null): AiLeaseAnalysi
   return null;
 }
 
+// Extracts plain text from a PDF buffer page by page using pdfjs-dist.
+// Dynamic import avoids Next.js module hoisting issues with the worker path.
 async function extractPdfText(buffer: ArrayBuffer): Promise<string> {
-  // Import pdfjs dynamically so the module-level worker setup runs after
-  // the workerSrc is assigned (avoids Next.js module hoisting issues)
   const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
 
   pdfjs.GlobalWorkerOptions.workerSrc = pathToFileURL(

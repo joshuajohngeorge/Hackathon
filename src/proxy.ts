@@ -1,3 +1,5 @@
+// Middleware that runs on every request. Redirects unauthenticated users away
+// from protected routes and authenticated users away from auth pages.
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 

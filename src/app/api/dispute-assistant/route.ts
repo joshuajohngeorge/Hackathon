@@ -1,7 +1,13 @@
+// POST /api/dispute-assistant
+// Powers Leroy, the standalone dispute assistant. Loads up to 30 messages of
+// conversation history from dispute_messages and optionally injects a lease
+// analysis if the user arrived from the Lease Checker page (via analysisId).
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { anthropic, MODEL } from "@/lib/anthropic";
 
+// Comprehensive system prompt covering Illinois tenant law, C-U-specific norms,
+// and a negotiation playbook for common landlord disputes.
 const SYSTEM_PROMPT = `You are a lease dispute coach specifically trained on Champaign-Urbana, Illinois tenant situations. You help UIUC students push back on landlords, understand their rights, and communicate confidently. You are not a lawyer and never pretend to be — but you are extremely well-informed and practical.
 
 ---

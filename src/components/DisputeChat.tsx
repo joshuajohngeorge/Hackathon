@@ -1,3 +1,6 @@
+// Full-page chat UI for the Dispute Assistant (/dispute-assistant).
+// Renders conversation history loaded server-side, then streams new messages
+// through /api/dispute-assistant. Markdown is rendered in assistant bubbles.
 "use client";
 
 import { useState, useRef, useEffect } from "react";
