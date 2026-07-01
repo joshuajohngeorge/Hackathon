@@ -6,6 +6,48 @@ import { resolve } from "path";
 
 export const runtime = "nodejs";
 
+type AiLeaseFlag = {
+  clause: string;
+  text: string;
+  severity: "high" | "medium" | "low";
+  explanation: string;
+};
+
+type AiLeaseAnalysis = {
+  summary: string;
+  flags: AiLeaseFlag[];
+};
+
+function normalizeFlag(flag: Partial<AiLeaseFlag>): AiLeaseFlag {
+  const severity = flag.severity === "high" || flag.severity === "medium" || flag.severity === "low"
+    ? flag.severity
+    : "medium";
+
+  return {
+    clause: String(flag.clause ?? "Lease issue").slice(0, 120),
+    text: String(flag.text ?? "").slice(0, 240),
+    severity,
+    explanation: String(flag.explanation ?? "Review this clause carefully before signing.").slice(0, 500),
+  };
+}
+
+function normalizeFlags(aiFlags: unknown[]): AiLeaseFlag[] {
+  const merged: AiLeaseFlag[] = [];
+  const seen = new Set<string>();
+
+  aiFlags.forEach((flag) => {
+    if (!flag || typeof flag !== "object") return;
+
+    const normalized = normalizeFlag(flag as Partial<AiLeaseFlag>);
+    const key = `${normalized.clause.toLowerCase()}:${normalized.text.slice(0, 80).toLowerCase()}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    merged.push(normalized);
+  });
+
+  return merged.slice(0, 12);
+}
+
 async function extractPdfText(buffer: ArrayBuffer): Promise<string> {
   // Import pdfjs dynamically so the module-level worker setup runs after
   // the workerSrc is assigned (avoids Next.js module hoisting issues)
@@ -66,7 +108,8 @@ export async function POST(req: NextRequest) {
       model: MODEL,
       max_tokens: 8192,
       system: `You are a tenant-rights assistant specializing in Champaign-Urbana, Illinois leases.
-Analyze the provided lease text and return a JSON object with exactly two fields:
+
+Return a JSON object with exactly two fields:
 - "summary": a 2-3 sentence plain-English summary of the lease
 - "flags": an array of the TOP 10 most important issues, each with:
   - "clause": short name of the clause (e.g. "Early Termination Fee")
@@ -81,9 +124,13 @@ Return at most 10 flags, prioritizing the most severe. Respond with ONLY the raw
     const raw = message.content[0].type === "text" ? message.content[0].text : "";
     // Strip markdown fences if Claude wrapped the JSON in ```json ... ```
     const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
-    let parsed: { summary: string; flags: unknown[] };
+    let parsed: AiLeaseAnalysis;
     try {
-      parsed = JSON.parse(cleaned);
+      const parsedJson = JSON.parse(cleaned) as Partial<AiLeaseAnalysis>;
+      parsed = {
+        summary: typeof parsedJson.summary === "string" ? parsedJson.summary : "",
+        flags: Array.isArray(parsedJson.flags) ? normalizeFlags(parsedJson.flags) : [],
+      };
     } catch {
       console.error("Raw AI response:", raw);
       return NextResponse.json({ error: "AI returned invalid JSON", raw }, { status: 502 });
@@ -94,7 +141,7 @@ Return at most 10 flags, prioritizing the most severe. Respond with ONLY the raw
       .insert({
         user_id: user.id,
         filename: file.name,
-        flags: parsed.flags ?? [],
+        flags: parsed.flags,
         summary: parsed.summary ?? "",
       })
       .select()

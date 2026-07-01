@@ -139,7 +139,7 @@ export function DisputeChat({
 function Avatar() {
   return (
     <div className="shrink-0 w-8 h-8 rounded-full bg-green-50 border border-green-100 flex items-center justify-center mt-0.5" title="Leroy">
-      <img src="/beaver.png" alt="Leroy" className="w-6 h-6 object-contain" />
+      <img src="/beaver.png" alt="Leroy" className="w-9 h-9 object-contain" />
     </div>
   );
 }

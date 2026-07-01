@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Mail } from "lucide-react";
 
 type Mode = "signin" | "signup" | "forgot";
 
@@ -63,19 +64,21 @@ export function AuthForm({ mode: initialMode }: { mode: "signin" | "signup" }) {
   const submitLabel = mode === "signup" ? "Create account" : mode === "signin" ? "Sign in" : "Send reset link";
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-gray-50 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <img src="/beaver.png" alt="Lease Beaver" className="w-28 h-28 object-contain mx-auto mb-2" />
-          <p className="text-gray-600">AI-powered lease analysis for UIUC students</p>
+          <img src="/beaver.png" alt="Lease Beaver" className="w-40 h-40 object-contain mx-auto mb-3" />
+          <p className="text-gray-600">Automated lease analysis for UIUC students</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-green-900/5 border border-white/50 p-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-6 text-center">{heading}</h2>
 
           {success ? (
-            <div className="text-center space-y-3">
-              <div className="text-4xl">📧</div>
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 rounded-2xl bg-green-50 flex items-center justify-center mx-auto mb-2 shadow-inner border border-green-100">
+                <Mail className="w-8 h-8 text-green-600" />
+              </div>
               <p className="text-sm text-green-700 bg-green-50 rounded-lg px-4 py-3">{success}</p>
               <button
                 onClick={() => switchMode("signin")}
@@ -97,7 +100,7 @@ export function AuthForm({ mode: initialMode }: { mode: "signin" | "signup" }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@illinois.edu"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white/50 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all"
                 />
               </div>
 
@@ -125,7 +128,7 @@ export function AuthForm({ mode: initialMode }: { mode: "signin" | "signup" }) {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white/50 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all"
                   />
                 </div>
               )}
@@ -135,7 +138,7 @@ export function AuthForm({ mode: initialMode }: { mode: "signin" | "signup" }) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-2.5 px-4 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+                className="w-full py-2.5 px-4 bg-green-600 text-white font-medium rounded-xl shadow-md shadow-green-600/20 hover:shadow-green-600/40 hover:-translate-y-0.5 hover:bg-green-700 disabled:opacity-50 disabled:hover:translate-y-0 transition-all duration-300"
               >
                 {loading ? "Please wait…" : submitLabel}
               </button>

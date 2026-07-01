@@ -15,7 +15,7 @@ export default async function AnalyzePage() {
       <header className="bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/beaver.png" alt="Lease Beaver" className="w-12 h-12 object-contain" />
+            <img src="/beaver.png" alt="Lease Beaver" className="w-32 h-32 object-contain" />
           </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-500 hidden sm:block">{user.email}</span>
