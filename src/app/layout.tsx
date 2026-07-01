@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LeaseCheck CU",
+  title: "Lease Beaver",
   description: "AI-powered lease analysis for UIUC students",
 };
 

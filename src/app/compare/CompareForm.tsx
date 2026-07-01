@@ -4,7 +4,7 @@ import { useActionState, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { compareRentalAction, CompareActionState } from "./actions";
 import type { ComparisonResult, RentalListing } from "@/lib/compareListings";
-import { Shield, Home as HomeIcon, MapPin, DollarSign, BedDouble, LocateFixed, Search } from "lucide-react";
+import { Home as HomeIcon, MapPin, DollarSign, BedDouble, LocateFixed, Search } from "lucide-react";
 
 const initialState: CompareActionState = { success: false };
 
@@ -90,11 +90,8 @@ export function CompareForm() {
       {/* Header */}
       <header className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-full bg-green-600 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-bold text-lg text-gray-900">LeaseCheck CU</span>
+          <Link href="/">
+            <img src="/beaver.png" alt="Lease Beaver" className="h-16 w-auto object-contain" />
           </Link>
           <Link href="/dashboard" className="text-sm font-medium text-gray-600 hover:text-gray-900">
             Dashboard
