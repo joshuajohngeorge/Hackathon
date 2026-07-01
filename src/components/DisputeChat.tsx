@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 type Message = { role: "user" | "assistant"; content: string };
 
 const OPENING_MESSAGE =
-  "Hi — I'm Leroy, your lease dispute assistant. I know Illinois tenant law and Champaign-Urbana housing inside out. Tell me what's going on with your lease or landlord and I'll help you figure out your options and exactly what to say.";
+  "Hi, I'm Leroy, your lease dispute assistant. I know Illinois tenant law and Champaign-Urbana housing inside out. Tell me what's going on with your lease or landlord and I'll help you figure out your options and exactly what to say.";
 
 export function DisputeChat({
   analysisId,
@@ -47,7 +47,7 @@ export function DisputeChat({
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Connection error — please try again." },
+        { role: "assistant", content: "Connection error. Please try again." },
       ]);
     } finally {
       setLoading(false);
@@ -67,7 +67,7 @@ export function DisputeChat({
       {/* Analysis banner */}
       {analysisId && (
         <div className="shrink-0 bg-green-50 border-b border-green-100 px-6 py-3 text-sm text-green-800">
-          <span className="font-medium">Your lease analysis is loaded.</span> I can see your flagged terms and benchmark comparisons — just tell me which issue you want to tackle.
+          <span className="font-medium">Your lease analysis is loaded.</span> I can see your flagged terms and benchmark comparisons. Just tell me which issue you want to tackle.
         </div>
       )}
 

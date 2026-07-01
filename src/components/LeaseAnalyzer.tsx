@@ -1,13 +1,21 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Upload, Send, Loader2 } from "lucide-react";
+import { Upload, AlertTriangle, AlertCircle, Info, Send, Loader2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+
+type Flag = {
+  clause: string;
+  text: string;
+  severity: "high" | "medium" | "low";
+  explanation: string;
+};
 
 type Analysis = {
   id: string;
   filename: string;
   summary: string;
+  flags: Flag[];
 };
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
@@ -128,6 +136,46 @@ export function LeaseAnalyzer() {
             <h2 className="font-semibold text-gray-900 mb-2">Summary</h2>
             <p className="text-gray-600 text-sm leading-relaxed">{analysis.summary}</p>
           </div>
+
+          {/* Flags */}
+          {analysis.flags?.length > 0 && (
+            <div>
+              <h2 className="font-semibold text-gray-900 mb-3">
+                {analysis.flags.length} issue{analysis.flags.length !== 1 ? "s" : ""} flagged
+              </h2>
+              <div className="space-y-3">
+                {analysis.flags.map((flag, i) => (
+                  <div
+                    key={i}
+                    className={`rounded-xl border p-4 ${
+                      flag.severity === "high"
+                        ? "border-red-200 bg-red-50"
+                        : flag.severity === "medium"
+                        ? "border-yellow-200 bg-yellow-50"
+                        : "border-blue-200 bg-blue-50"
+                    }`}
+                  >
+                    <div className="flex items-start gap-2">
+                      {flag.severity === "high" ? (
+                        <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                      ) : flag.severity === "medium" ? (
+                        <AlertCircle className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5" />
+                      ) : (
+                        <Info className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+                      )}
+                      <div className="min-w-0">
+                        <p className="font-medium text-gray-900 text-sm">{flag.clause}</p>
+                        {flag.text && (
+                          <p className="text-xs text-gray-500 mt-0.5 italic">&ldquo;{flag.text}&rdquo;</p>
+                        )}
+                        <p className="text-sm text-gray-700 mt-1">{flag.explanation}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Chat */}
           <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">

@@ -48,6 +48,62 @@ function normalizeFlags(aiFlags: unknown[]): AiLeaseFlag[] {
   return merged.slice(0, 12);
 }
 
+function extractJsonBlob(raw: string): string {
+  // Strip markdown fences
+  let s = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  // Find outermost { ... } in case Claude added preamble/postamble text
+  const start = s.indexOf("{");
+  const end = s.lastIndexOf("}");
+  if (start !== -1 && end > start) s = s.slice(start, end + 1);
+  return s;
+}
+
+function repairTruncated(blob: string): string {
+  // If max_tokens cut the response mid-JSON, close any open arrays/objects
+  const stack: string[] = [];
+  let inString = false;
+  let escape = false;
+  for (const ch of blob) {
+    if (escape) { escape = false; continue; }
+    if (ch === "\\" && inString) { escape = true; continue; }
+    if (ch === '"') { inString = !inString; continue; }
+    if (inString) continue;
+    if (ch === "{" || ch === "[") stack.push(ch === "{" ? "}" : "]");
+    else if (ch === "}" || ch === "]") stack.pop();
+  }
+  // Remove trailing comma before we close
+  let repaired = blob.trimEnd().replace(/,\s*$/, "");
+  // Close open structures in reverse order
+  for (let i = stack.length - 1; i >= 0; i--) repaired += stack[i];
+  return repaired;
+}
+
+function parseAiResponse(raw: string, stopReason: string | null): AiLeaseAnalysis | null {
+  const blob = extractJsonBlob(raw);
+
+  // First try: parse as-is
+  try {
+    const j = JSON.parse(blob) as Partial<AiLeaseAnalysis>;
+    return {
+      summary: typeof j.summary === "string" ? j.summary : "",
+      flags: Array.isArray(j.flags) ? normalizeFlags(j.flags) : [],
+    };
+  } catch { /* fall through */ }
+
+  // Second try: if truncated by max_tokens, attempt structural repair
+  if (stopReason === "max_tokens") {
+    try {
+      const j = JSON.parse(repairTruncated(blob)) as Partial<AiLeaseAnalysis>;
+      return {
+        summary: typeof j.summary === "string" ? j.summary : "",
+        flags: Array.isArray(j.flags) ? normalizeFlags(j.flags) : [],
+      };
+    } catch { /* fall through */ }
+  }
+
+  return null;
+}
+
 async function extractPdfText(buffer: ArrayBuffer): Promise<string> {
   // Import pdfjs dynamically so the module-level worker setup runs after
   // the workerSrc is assigned (avoids Next.js module hoisting issues)
@@ -122,16 +178,10 @@ Return at most 10 flags, prioritizing the most severe. Respond with ONLY the raw
     });
 
     const raw = message.content[0].type === "text" ? message.content[0].text : "";
-    // Strip markdown fences if Claude wrapped the JSON in ```json ... ```
-    const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
-    let parsed: AiLeaseAnalysis;
-    try {
-      const parsedJson = JSON.parse(cleaned) as Partial<AiLeaseAnalysis>;
-      parsed = {
-        summary: typeof parsedJson.summary === "string" ? parsedJson.summary : "",
-        flags: Array.isArray(parsedJson.flags) ? normalizeFlags(parsedJson.flags) : [],
-      };
-    } catch {
+
+    // Attempt to parse, with progressive fallbacks for common Claude quirks
+    const parsed = parseAiResponse(raw, message.stop_reason);
+    if (!parsed) {
       console.error("Raw AI response:", raw);
       return NextResponse.json({ error: "AI returned invalid JSON", raw }, { status: 502 });
     }

@@ -57,10 +57,6 @@ export default async function Home() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <span className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-green-700 bg-green-50 px-3 py-1.5 rounded-full">
-              <Lock className="w-3 h-3" />
-              Privacy-first
-            </span>
             {user ? (
               <Link
                 href="/dashboard"
@@ -122,8 +118,8 @@ export default async function Home() {
 
             <p className="mt-4 flex items-center gap-1.5 text-sm text-gray-500">
               <Lock className="w-3.5 h-3.5" />
-              Sign in with your Illinois email — your lease data stays tied to
-              your account, never shared.
+              Sign in with your Illinois email. Your lease data stays tied to
+              your account and is never shared.
             </p>
           </div>
 
@@ -293,7 +289,7 @@ export default async function Home() {
           </p>
           <span className="flex items-center gap-1.5 text-xs text-gray-500">
             <Lock className="w-3.5 h-3.5" />
-            Your data is secured — sign in required
+            Your data is secured. Sign in required.
           </span>
         </div>
       </footer>

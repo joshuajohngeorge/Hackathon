@@ -60,7 +60,7 @@ export default async function DashboardPage() {
             </div>
             <p className="text-sm text-gray-500 leading-relaxed mb-6">
               Upload your lease. We scan for auto-renewal traps, vague maintenance
-              clauses, unreasonable fees, and privacy violations — with plain-English
+              clauses, unreasonable fees, and privacy violations. Get plain-English
               explanations and questions to ask your landlord.
             </p>
           </Link>
@@ -97,7 +97,7 @@ export default async function DashboardPage() {
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-1">Dispute Assistant</h2>
               <p className="text-sm text-gray-500 leading-relaxed">
-                Get help disputing any lease issue — security deposits, early termination, landlord entry, habitability, and more. Grounded in Illinois law and C-U norms.
+                Get help disputing any lease issue: security deposits, early termination, landlord entry, habitability, and more. Grounded in Illinois law and C-U norms.
               </p>
             </div>
           </div>
